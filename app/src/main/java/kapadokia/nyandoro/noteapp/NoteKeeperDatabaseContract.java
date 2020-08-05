@@ -40,7 +40,7 @@ public final class NoteKeeperDatabaseContract {
 
         // 1.5.1 add _id primary key to wor effectively with android framework
         public static final String SQL_CREATE_TABLE=
-                "CREATE_TABLE "+ TABLE_NAME +" ("+
+                "CREATE TABLE "+ TABLE_NAME +" ("+
                         _ID+ " INTEGER PRIMARY KEY, "+
                         COLUMN_NOTE_TITLE+" TEXT NOT NULL, "+
                         COLUMN_NOTE_TEXT +" TEXT, "+

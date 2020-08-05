@@ -2,6 +2,7 @@ package kapadokia.nyandoro.noteapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -32,12 +33,19 @@ public class MainActivity extends AppCompatActivity
     private CourseRecyclerAdapter mCourseRecyclerAdapter;
     private GridLayoutManager mCoursesLayoutManager;
 
+//    STEP 3
+    // 3.1
+    private NoteKeeperOpenHelper mDbOpenGHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // 3.2 create an instance of the helper
+        mDbOpenGHelper = new NoteKeeperOpenHelper(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +69,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initializeDisplayContent();
+    }
+
+    // 3.3 override onDestroy method to close the mDbOpenHelper
+    @Override
+    protected void onDestroy() {
+        mDbOpenGHelper.close();
+        super.onDestroy();
     }
 
     @Override
@@ -103,6 +118,10 @@ public class MainActivity extends AppCompatActivity
         mRecyclerItems.setLayoutManager(mNotesLayoutManager);
         mRecyclerItems.setAdapter(mNoteRecyclerAdapter);
 
+        // 3.4 here we will connect to the database, get the rows out of the note info table and display it to the
+        // user
+        // use the helper to return a SQLite database reference using the getReadableDatabase()
+        SQLiteDatabase db = mDbOpenGHelper.getReadableDatabase();
         selectNavigationMenuItem(R.id.nav_notes);
     }
 
